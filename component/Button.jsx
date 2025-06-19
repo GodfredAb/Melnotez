@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from 'react'
 
 const Button = (
@@ -7,43 +7,42 @@ const Button = (
         handlePress,
         containerStyles,
         textStyles,
-        isLoading,
+        isLoading
     }
 ) => {
-  return (
-   <TouchableOpacity
-   onPress={handlePress}
-   activeOpacity={0.7}
-   style={styles.CustomBottom}
-   className={`${containerStyles} 
-        isLoading ? style={{opacity: 50}} : ""`}
-    disabled={isLoading}
-   >
-    <Text 
-    style={{ 
-        color: 'white',
-        fontFamily: 'Poppins-Regular',
-        fontSize: 18 
-        }}
+    return (
+        <TouchableOpacity 
+        onPress={handlePress}
+        activeOpacity={0.7}
+        style={styles.CustomButtom}
+        className={`${containerStyles}}
+            isLoading ? style = {{opacity: 50} : ""`}
+        disabled={isLoading}
         >
-        {title}
-    </Text>
-   </TouchableOpacity>
-  )
+            <Text
+            style={{
+                color: 'white', 
+                fontFamily: 'Poppins-Regular',
+                fontSize: 18
+            }}
+            >
+                {title}
+            </Text>
+        </TouchableOpacity>
+    )
 }
 
 export default Button;
 
 const styles = StyleSheet.create({
-    CustomBottom: {
+    CustomButton: {
         backgroundColor: '#6C15A2',
         borderRadius: 30,
         minHeight: 50,
         direction: 'flex',
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'center', 
         alignItems: 'center',
         margin: 8,
-
     }
 })
