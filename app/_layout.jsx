@@ -15,9 +15,12 @@ const RootLayout = () => {
 
   return (
     <Stack>
-      <Stack.Screen names='index' options={{headerShown: false}} />
+      <Stack.Screen names='index.jsx' options={{headerShown: false}} />
     </Stack>
   )
 }
 
 export default RootLayout;
+
+
+

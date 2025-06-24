@@ -13,7 +13,7 @@ const Welcome = () => {
     <SafeAreaView
       style={{
         height: 'full',
-        backgroundColor: '#'
+        backgroundColor: 'black'
       }}
     >
       <ImageBackground source={images.indexH} resizeMode="cover" />
@@ -27,7 +27,7 @@ const Welcome = () => {
         <Text 
           style={{
             fontSize: 40,
-            color: 'white',
+            color: 'black',
             fontWeight: 600,
             lineHeight: 75,
             fontFamily: 'Poppins-SemiBold'
@@ -48,7 +48,7 @@ const Welcome = () => {
         <Text
         style={{
           fontSize: 25, 
-          color: 'white',
+          color: 'black',
           fontWeight: 600,
           lineHeight: 30,
           fontFamily: 'Poppins-Regular'
@@ -86,3 +86,4 @@ const styles = StyleSheet.create({
     marginTop: 7,
   }
 })
+

@@ -14,7 +14,7 @@ const Button = (
         <TouchableOpacity 
         onPress={handlePress}
         activeOpacity={0.7}
-        style={styles.CustomButtom}
+        style={styles.customButton}
         className={`${containerStyles}}
             isLoading ? style = {{opacity: 50} : ""`}
         disabled={isLoading}
@@ -35,7 +35,7 @@ const Button = (
 export default Button;
 
 const styles = StyleSheet.create({
-    CustomButton: {
+    customButton: {
         backgroundColor: '#6C15A2',
         borderRadius: 30,
         minHeight: 50,
@@ -44,5 +44,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center', 
         alignItems: 'center',
         margin: 8,
-    }
+    },
 })
