@@ -8,12 +8,12 @@ import { searchPosts } from "../../lib/appwrite";
 import { EmptyState, SearchInput, VideoCard } from "../../components";
 
 const Search = () => {
-  const { query } = useLocalSearchParams();
-  const { data: posts, refetch } = useAppwrite(() => searchPosts(query));
+  // const { query } = useLocalSearchParams();
+  // const { data: posts, refetch } = useAppwrite(() => searchPosts(query));
 
-  useEffect(() => {
-    refetch();
-  }, [query]);
+  // useEffect(() => {
+  //   refetch();
+  // }, [query]);
 
   return (
     <SafeAreaView className="bg-primary h-full">
