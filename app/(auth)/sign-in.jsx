@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, ScrollView, Image, Dimensions } from "react-native";
 
@@ -5,6 +7,15 @@ import { images } from "../../constants";
 import { FormField, CustomButton } from "../../components";
 
 const SignIn = () => {
+    const [form, setForm] = useState({ email: "", password: "" });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const submit = () => {
+        setIsSubmitting(true);
+        // Add your sign-in logic here
+        // After done:
+        setIsSubmitting(false);
+    };
 
     return (
         <SafeAreaView className="bg-primary h-full">
@@ -28,7 +39,7 @@ const SignIn = () => {
                     <FormField
                         title="Email"
                         value={form.email}
-                        handleChangeText={(e) => SVGAnimateTransformElement({...form, email: e})}
+                        handleChangeText={(e) => setForm({ ...form, email: e })}
                         otherStyles="mt-7"
                         keyboardType="email-address"
                     />    
@@ -46,6 +57,18 @@ const SignIn = () => {
                         containerStyles="mt-7"
                         isLoading={isSubmitting}
                     />
+
+                    <View className="flex justify-center pt-5 flex-row gap-2">
+                        <Text className="text-lg text-gray-100 font-pregular">
+                        Don't have an account?
+                        </Text>
+                        <Link
+                        href="/sign-up"
+                        className="text-lg font-psemibold text-secondary"
+                        >
+                        Signup
+                        </Link>
+                    </View>
                 </View>
             </ScrollView>
         </SafeAreaView>
