@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "sora",
-    "slug": "sora",
+    "name": "Melnotez",
+    "slug": "Melnotez",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -12,7 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "scheme": "sora",
+    "scheme": "Melnotez",
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
