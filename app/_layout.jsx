@@ -17,7 +17,7 @@ const RootLayout = () => {
                     headerShown: false,
                 }}
             />
-            <Stack.Screen
+              <Stack.Screen
                 name="index"
                 options={{
                     headerShown: false,
