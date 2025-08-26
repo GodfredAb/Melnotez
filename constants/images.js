@@ -8,6 +8,7 @@ import empty from "../assets/images/empty.png";
 import cover from "../assets/images/index-cover-1.jpg"
 import card from "../assets/images/card-2.png";
 import authscreens from "../assets/images/auth-screens.jpg";
+import tabscover from "../assets/images/tabscover.jpg";
 
 export default {   
             cover, 
@@ -20,4 +21,5 @@ export default {
             logo, 
             logoSmall, 
             empty, 
+            tabscover,
 };

@@ -1,92 +1,93 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { View, Text, Pressable, ScrollView, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { FlatList, Image, RefreshControl, Text, View } from "react-native";
-
-import { images } from "../../constants";
-import { EmptyState, SearchInput, Trending, VideoCard } from "../../components";
-
-const mockPosts = [
-  // Example mock data, or leave as []
-  // {
-  //   $id: "1",
-  //   title: "Sample Video",
-  //   thumbnail: images.thumbnail,
-  //   video: "https://sample-videos.com/video123.mp4",
-  //   creator: { username: "DemoUser", avatar: images.profile },
-  // },
-];
-
-const mockLatestPosts = [
-  // Example mock data, or leave as []
-];
+import { Music, MoreVertical } from "lucide-react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const Home = () => {
-  const [posts, setPosts] = useState(mockPosts);
-  const [latestPosts, setLatestPosts] = useState(mockLatestPosts);
-  const [refreshing, setRefreshing] = useState(false);
+  const navigation = useNavigation();
+  const [songs, setSongs] = useState([
+    { id: 1, name: "AUD-20250607-WA006.m4a" },
+  ]);
 
-  const onRefresh = async () => {
-    setRefreshing(true);
-    // Optionally reset or shuffle mock data here
-    setRefreshing(false);
+  const handleRename = (id) => {
+    Alert.prompt(
+      "Rename Song",
+      "Enter new name for your file:",
+      (newName) => {
+        if (newName) {
+          setSongs((prev) =>
+            prev.map((s) => (s.id === id ? { ...s, name: newName } : s))
+          );
+        }
+      }
+    );
+  };
+
+  const handleDelete = (id) => {
+    Alert.alert("Delete Song", "Are you sure?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: () => {
+          setSongs((prev) => prev.filter((s) => s.id !== id));
+        },
+      },
+    ]);
+  };
+
+  const handleMenu = (id) => {
+    Alert.alert("Options", "", [
+      { text: "Rename", onPress: () => handleRename(id) },
+      { text: "Delete", onPress: () => handleDelete(id), style: "destructive" },
+      { text: "Cancel", style: "cancel" },
+    ]);
   };
 
   return (
-    <SafeAreaView className="bg-primary">
-      <FlatList
-        data={posts}
-        keyExtractor={(item, idx) => item.$id || idx.toString()}
-        renderItem={({ item }) => (
-          <VideoCard
-            title={item.title}
-            thumbnail={item.thumbnail}
-            video={item.video}
-            creator={item.creator.username}
-            avatar={item.creator.avatar}
-          />
-        )}
-        ListHeaderComponent={() => (
-          <View className="flex my-6 px-4 space-y-6">
-            <View className="flex justify-between items-start flex-row mb-6">
-              <View>
-                <Text className="font-pmedium text-sm text-gray-100">
-                  Welcome Back
-                </Text>
-                <Text className="text-2xl font-psemibold text-white">
-                  JSMastery
-                </Text>
-              </View>
+    <SafeAreaView className="flex-1 bg-[#161622]">
+      <ScrollView contentContainerStyle={{ padding: 24 }}>
+        {/* Header */}
+        <Text className="text-2xl font-bold text-white mb-6">Library</Text>
 
-              <View className="mt-1.5">
-                <Image
-                  source={images.logoSmall}
-                  className="w-9 h-10"
-                  resizeMode="contain"
-                />
-              </View>
-            </View>
+        {/* Sync Library Card */}
+        <View className="bg-[#1E1E2D] rounded-2xl p-6 mb-6">
+          <Text className="text-gray-300 text-sm mb-4 text-center">
+            Sync your library and use Stemz on all your devices: phones, tablets
+            & desktop
+          </Text>
+          <Pressable className="bg-[#FFA001] rounded-xl px-6 py-3">
+            <Text className="text-white font-semibold text-center">
+              Sync my library
+            </Text>
+          </Pressable>
+        </View>
 
-            <SearchInput />
-
-            <View className="w-full flex-1 pt-5 pb-8">
-              <Text className="text-lg font-pregular text-gray-100 mb-3">
-                Latest Videos
+        {/* Uploaded Songs */}
+        {songs.map((song) => (
+          <View
+            key={song.id}
+            className="flex-row items-center justify-between py-4"
+          >
+            {/* Left icon → Navigate to Create */}
+            <Pressable
+              className="flex-row items-center gap-4"
+              onPress={() => navigation.navigate("Create")}
+            >
+              <Music size={20} color="#9CA3AF" />
+              <Text className="text-gray-200 text-sm font-medium">
+                {song.name}
               </Text>
+            </Pressable>
 
-              <Trending posts={latestPosts ?? []} />
-            </View>
+            {/* 3 Dots Menu */}
+            <Pressable onPress={() => handleMenu(song.id)}>
+              <MoreVertical size={20} color="#9CA3AF" />
+            </Pressable>
           </View>
-        )}
-        ListEmptyComponent={() => (
-          <EmptyState
-            title="No Videos Found"
-            subtitle="No videos created yet"
-          />
-        )}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      />
+        ))}
+      </ScrollView>
     </SafeAreaView>
   );
 };
