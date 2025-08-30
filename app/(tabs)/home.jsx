@@ -3,6 +3,13 @@ import { View, Text, Pressable, ScrollView, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Music, MoreVertical } from "lucide-react-native";
 import { useNavigation } from "@react-navigation/native";
+import { StatusBar } from "react-native";
+
+
+
+import { router } from "expo-router";
+
+
 
 const Home = () => {
   const navigation = useNavigation();
@@ -73,7 +80,7 @@ const Home = () => {
             {/* Left icon → Navigate to Create */}
             <Pressable
               className="flex-row items-center gap-4"
-              onPress={() => navigation.navigate("Create")}
+              onPress={() => router.push("/innerRoutes/Create")}
             >
               <Music size={20} color="#9CA3AF" />
               <Text className="text-gray-200 text-sm font-medium">
@@ -87,6 +94,9 @@ const Home = () => {
             </Pressable>
           </View>
         ))}
+
+
+          <StatusBar barStyle="light-content" translucent />
       </ScrollView>
     </SafeAreaView>
   );

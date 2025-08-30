@@ -9,8 +9,9 @@ import {
   LogIn,
   ChevronRight,
 } from "lucide-react-native";
+import { router } from "expo-router";
 
-const Profile = () => {
+const Info = () => {
   const menuItems = [
     {
       icon: Gift,
@@ -42,6 +43,7 @@ const Profile = () => {
       subtitle: null,
       showChevron: false,
       color: "#FFA001", // custom color for "Log in"
+      route: "/(auth)/sign-up",   // expo-router route
     },
   ];
 
@@ -68,15 +70,17 @@ const Profile = () => {
         {/* Menu Items */}
         <View className="space-y-1">
           {menuItems.map((item, index) => (
-            <View
+            <Pressable
               key={index}
               className="flex-row items-center justify-between py-4 px-2"
+              onPress={() => {
+                if (item.route) {
+                  router.push(item.route);
+                }
+              }}
             >
               <View className="flex-row items-center gap-4">
-                <item.icon
-                  size={20}
-                  color={item.color || "#9CA3AF"}
-                />
+                <item.icon size={20} color={item.color || "#9CA3AF"} />
                 <Text
                   className="text-base"
                   style={{ color: item.color || "white" }}
@@ -89,11 +93,9 @@ const Profile = () => {
                 {item.subtitle && (
                   <Text className="text-gray-400 text-sm">{item.subtitle}</Text>
                 )}
-                {item.showChevron && (
-                  <ChevronRight size={16} color="#9CA3AF" />
-                )}
+                {item.showChevron && <ChevronRight size={16} color="#9CA3AF" />}
               </View>
-            </View>
+            </Pressable>
           ))}
         </View>
       </ScrollView>
@@ -101,4 +103,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default Info;
