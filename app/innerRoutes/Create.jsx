@@ -1,80 +1,78 @@
 import React, { useState } from "react";
-import { View, ScrollView, Text, TouchableOpacity } from "react-native";
+import { View, ScrollView, Text, TouchableOpacity, Alert } from "react-native";
+import { useLocalSearchParams } from "expo-router";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const instrumentOptions = [
-  { id: 1, instruments: ["Vocals", "Instrumental"], isLocked: false },
-  { id: 2, instruments: ["Vocals", "Drums", "Bass", "Other"], isLocked: false },
-  { id: 3, instruments: ["Vocals", "Drums", "Bass", "Guitar", "Other"], isLocked: true },
-  { id: 4, instruments: ["Vocals", "Drums", "Bass", "Piano", "Other"], isLocked: true },
-  { id: 5, instruments: ["Vocals", "Drums", "Bass", "Guitar", "Piano", "Other"], isLocked: true },
+  { id: 1, instruments: ["Lyrics", "Chords"], isLocked: false },
+  { id: 2, instruments: ["Lyrics", "Drums", "Bass", "Chords"], isLocked: false },
 ];
 
 const Create = () => {
+  const { id } = useLocalSearchParams();
+  const { songs } = useGlobalContext();   // ✅ correct usage of GlobalProvider
+  const song = songs.find((s) => String(s.id) === id);
+
   const [selectedOption, setSelectedOption] = useState(1);
 
+  const handleAnalyze = async () => {
+    if (!song) return Alert.alert("Error", "No song selected!");
+
+    let formData = new FormData();
+    formData.append("file", {
+      uri: song.uri,
+      type: "audio/mpeg", // adjust if you allow other formats
+      name: song.name,
+    });
+    formData.append("option", selectedOption);
+
+    try {
+      const res = await fetch("http://localhost:8000/analyze", {
+        method: "POST",
+        body: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const data = await res.json();
+      console.log("Analysis:", data);
+      Alert.alert("Result", JSON.stringify(data, null, 2));
+    } catch (err) {
+      console.error("Error analyzing:", err);
+      Alert.alert("Error", "Failed to analyze song");
+    }
+  };
+
   return (
-    <View className="flex-1 bg-white">
-      {/* Fake Status Bar */}
-      <View className="h-6 bg-white" />
-
-      {/* Header */}
-      <View className="flex-row items-center px-4 py-3 border-b border-gray-200">
-        <TouchableOpacity onPress={() => console.log("Back pressed")}>
-          <Text className="text-blue-500 font-medium">Back</Text>
-        </TouchableOpacity>
-        <Text className="flex-1 text-center text-lg font-semibold">
-          Instruments
+    <View className="flex-1 bg-[#161622]">
+      <ScrollView contentContainerStyle={{ padding: 24 }}>
+        <Text className="text-white text-lg mb-4">
+          Analyzing: {song?.name || "No song selected"}
         </Text>
-        <View className="w-12" /> {/* spacer for symmetry */}
-      </View>
 
-      {/* Content */}
-      <ScrollView
-        contentContainerStyle={{ paddingVertical: 24 }}
-        className="flex-1 px-4"
-      >
-        {instrumentOptions.map((option) => {
-          const isSelected = selectedOption === option.id;
-
-          return (
-            <TouchableOpacity
-              key={option.id}
-              disabled={option.isLocked}
-              onPress={() => !option.isLocked && setSelectedOption(option.id)}
-              className={`p-4 rounded-2xl mb-4 border 
-                ${isSelected ? "border-blue-500 bg-blue-50" : "border-gray-300 bg-white"} 
-                ${option.isLocked ? "opacity-50" : ""}`}
-            >
-              <Text className="font-semibold mb-2">Option {option.id}</Text>
-              <Text>{option.instruments.join(", ")}</Text>
-              {isSelected && <Text className="text-blue-500 mt-2">✓ Selected</Text>}
-              {option.isLocked && <Text className="text-red-500 mt-2">Locked</Text>}
-            </TouchableOpacity>
-          );
-        })}
-      </ScrollView>
-
-      {/* Continue Button */}
-      <View className="p-4 pb-8">
-        <TouchableOpacity
-          onPress={() => console.log("Continue pressed")}
-          className="bg-blue-500 py-4 rounded-2xl items-center"
-        >
-          <Text className="text-white font-semibold text-lg">Continue</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Navigation Dots */}
-      <View className="flex-row justify-center space-x-3 pb-6">
-        {[1, 2, 3].map((dot) => (
-          <View
-            key={dot}
-            className={`w-2 h-2 rounded-full ${
-              dot === 2 ? "bg-blue-500" : "bg-gray-300"
+        {instrumentOptions.map((option) => (
+          <TouchableOpacity
+            key={option.id}
+            onPress={() => setSelectedOption(option.id)}
+            className={`p-4 rounded-2xl mb-4 border ${
+              selectedOption === option.id
+                ? "border-blue-500 bg-blue-50"
+                : "border-gray-300 bg-white"
             }`}
-          />
+          >
+            <Text className="font-semibold mb-2">Option {option.id}</Text>
+            <Text>{option.instruments.join(", ")}</Text>
+          </TouchableOpacity>
         ))}
-      </View>
+
+        <TouchableOpacity
+          onPress={handleAnalyze}
+          className="bg-blue-500 py-4 rounded-2xl items-center mt-6"
+        >
+          <Text className="text-white font-semibold text-lg">Analyze</Text>
+        </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 };

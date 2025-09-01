@@ -1,49 +1,39 @@
-import React, { useState } from "react";
-import { View, Text, Pressable, ScrollView, Alert } from "react-native";
+import React from "react";
+import { View, Text, Pressable, ScrollView, Alert, StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Music, MoreVertical } from "lucide-react-native";
-import { useNavigation } from "@react-navigation/native";
-import { StatusBar } from "react-native";
-
-
-
 import { router } from "expo-router";
-
-
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const Home = () => {
-  const navigation = useNavigation();
-  const [songs, setSongs] = useState([
-    { id: 1, name: "AUD-20250607-WA006.m4a" },
-  ]);
+  const { songs, renameSong, removeSong } = useGlobalContext();
 
+  // Rename handler
   const handleRename = (id) => {
     Alert.prompt(
       "Rename Song",
       "Enter new name for your file:",
       (newName) => {
         if (newName) {
-          setSongs((prev) =>
-            prev.map((s) => (s.id === id ? { ...s, name: newName } : s))
-          );
+          renameSong(id, newName);
         }
       }
     );
   };
 
+  // Delete handler
   const handleDelete = (id) => {
     Alert.alert("Delete Song", "Are you sure?", [
       { text: "Cancel", style: "cancel" },
       {
         text: "Delete",
         style: "destructive",
-        onPress: () => {
-          setSongs((prev) => prev.filter((s) => s.id !== id));
-        },
+        onPress: () => removeSong(id),
       },
     ]);
   };
 
+  // Menu options
   const handleMenu = (id) => {
     Alert.alert("Options", "", [
       { text: "Rename", onPress: () => handleRename(id) },
@@ -72,31 +62,34 @@ const Home = () => {
         </View>
 
         {/* Uploaded Songs */}
-        {songs.map((song) => (
-          <View
-            key={song.id}
-            className="flex-row items-center justify-between py-4"
-          >
-            {/* Left icon → Navigate to Create */}
-            <Pressable
-              className="flex-row items-center gap-4"
-              onPress={() => router.push("/innerRoutes/Create")}
+        {songs.length === 0 ? (
+          <Text className="text-gray-400 text-center">No songs uploaded yet</Text>
+        ) : (
+          songs.map((song) => (
+            <View
+              key={song.id}
+              className="flex-row items-center justify-between py-4"
             >
-              <Music size={20} color="#9CA3AF" />
-              <Text className="text-gray-200 text-sm font-medium">
-                {song.name}
-              </Text>
-            </Pressable>
+              {/* Left icon → Navigate to Create */}
+              <Pressable
+                className="flex-row items-center gap-4"
+                onPress={() => router.push("/innerRoutes/Create")}
+              >
+                <Music size={20} color="#9CA3AF" />
+                <Text className="text-gray-200 text-sm font-medium">
+                  {song.name}
+                </Text>
+              </Pressable>
 
-            {/* 3 Dots Menu */}
-            <Pressable onPress={() => handleMenu(song.id)}>
-              <MoreVertical size={20} color="#9CA3AF" />
-            </Pressable>
-          </View>
-        ))}
+              {/* 3 Dots Menu */}
+              <Pressable onPress={() => handleMenu(song.id)}>
+                <MoreVertical size={20} color="#9CA3AF" />
+              </Pressable>
+            </View>
+          ))
+        )}
 
-
-          <StatusBar barStyle="light-content" translucent />
+        <StatusBar barStyle="light-content" translucent />
       </ScrollView>
     </SafeAreaView>
   );
