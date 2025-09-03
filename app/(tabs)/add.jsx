@@ -5,57 +5,58 @@ import { FolderOpen, Image as ImageIcon, Mic } from "lucide-react-native";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import { Audio } from "expo-av";
-import { useGlobalContext } from "../../context/GlobalProvider";
-import { useNavigation } from "expo-router";
+
 
 const Add = () => {
-  const { addSong } = useGlobalContext();
-  const navigation = useNavigation();
 
-  const pickFile = async () => {
-    const result = await DocumentPicker.getDocumentAsync({
-      type: ["audio/*", "video/*"],
-    });
-    if (result.type !== "cancel") {
-      const newSong = {
-        id: Date.now(),
-        name: result.name,
-        uri: result.uri,
-      };
-      addSong(newSong);
-      navigation.navigate("(tabs)/home"); // go back to library
+
+   const pickFile = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: ["audio/*", "video/*"],
+      });
+      if (result.type !== "cancel") {
+        console.log("Picked file:", result);
+      }
+    } catch (error) {
+      console.error("Error picking file:", error);
     }
   };
 
-  const pickGallery = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-    });
-    if (!result.canceled) {
-      const newSong = {
-        id: Date.now(),
-        name: "Gallery Song",
-        uri: result.assets[0].uri,
-      };
-      addSong(newSong);
-      navigation.navigate("(tabs)/home");
+
+   const pickGallery = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: false,
+      });
+      if (!result.canceled) {
+        console.log("Picked from gallery:", result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error("Error picking gallery:", error);
     }
   };
 
   const recordAudio = async () => {
-    const { status } = await Audio.requestPermissionsAsync();
-    if (status !== "granted") {
-      alert("Microphone permission is required!");
-      return;
+    try {
+      const { status } = await Audio.requestPermissionsAsync();
+      if (status !== "granted") {
+        alert("Microphone permission is required!");
+        return;
+      }
+
+      const recording = new Audio.Recording();
+      await recording.prepareToRecordAsync(
+        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
+      );
+      await recording.startAsync();
+
+      alert("Recording started. Stop recording from your logic.");
+      console.log("Recording object:", recording);
+    } catch (error) {
+      console.error("Error recording audio:", error);
     }
-
-    const recording = new Audio.Recording();
-    await recording.prepareToRecordAsync(Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY);
-    await recording.startAsync();
-
-    alert("Recording started. Stop recording manually for now.");
-    // Once stopped, you would save it same way:
-    // addSong({ id: Date.now(), name: "Recording.m4a", uri: recording.getURI() })
   };
 
   return (

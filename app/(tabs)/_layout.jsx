@@ -1,4 +1,4 @@
-import { Tabs } from 'expo-router';    
+import { Tabs, Redirect } from 'expo-router';    
 import React from 'react'  
 import { StatusBar } from 'expo-status-bar';
 import { View, Text, Image, ImageBackground } from 'react-native';
